@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { answerSessionQuestion, finishSession, startLearningSession } from "../api/sessions";
-import type { AnswerCheckResponse, Exercise, ExerciseSet, SessionReport, UserProfile } from "../types";
+import { getGrammarNoteById } from "../api/grammarNotes";
+import type { AnswerCheckResponse, Exercise, ExerciseSet, GrammarNote, SessionReport, UserProfile } from "../types";
 import ErrorBanner from "./ErrorBanner";
 import ExercisePrompt from "./ExercisePrompt";
+import GrammarNotePanel from "./GrammarNotePanel";
 import Loading from "./Loading";
 
 interface LearningSessionProps {
@@ -44,6 +46,10 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
   const [answerText, setAnswerText] = useState("");
   const [answerResult, setAnswerResult] = useState<AnswerCheckResponse | null>(null);
   const [report, setReport] = useState<SessionReport | null>(null);
+  const [grammarNote, setGrammarNote] = useState<GrammarNote | null>(null);
+  const [showGrammarNote, setShowGrammarNote] = useState(false);
+  const [loadingGrammarNote, setLoadingGrammarNote] = useState(false);
+  const [grammarError, setGrammarError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [finishing, setFinishing] = useState(false);
@@ -156,10 +162,39 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
     setQueue(nextQueue);
     setAnswerText("");
     setAnswerResult(null);
+    setShowGrammarNote(false);
+    setGrammarNote(null);
+    setGrammarError(null);
     setQuestionStartedAt(Date.now());
 
     if (nextQueue.length === 0) {
       await finishCurrentSession();
+    }
+  }
+
+  useEffect(() => {
+    setShowGrammarNote(false);
+    setGrammarNote(null);
+    setGrammarError(null);
+    setLoadingGrammarNote(false);
+  }, [currentExercise?.grammarNoteId]);
+
+  async function loadGrammarNote() {
+    if (!currentExercise?.grammarNoteId || grammarNote || loadingGrammarNote) {
+      setShowGrammarNote(true);
+      return;
+    }
+
+    try {
+      setLoadingGrammarNote(true);
+      setGrammarError(null);
+      const note = await getGrammarNoteById(currentExercise.grammarNoteId);
+      setGrammarNote(note);
+      setShowGrammarNote(true);
+    } catch (err) {
+      setGrammarError(err instanceof Error ? err.message : "Could not load grammar note");
+    } finally {
+      setLoadingGrammarNote(false);
     }
   }
 
@@ -246,6 +281,23 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
         onAnswerTextChange={setAnswerText}
         onSubmitAnswer={submitAnswer}
       />
+
+      {currentExercise.grammarNoteId && (
+        <div className="button-group" style={{ marginTop: 16 }}>
+          <button
+            type="button"
+            className="button button-ghost"
+            onClick={loadGrammarNote}
+            disabled={loadingGrammarNote}
+          >
+            {loadingGrammarNote ? "Loading explanation…" : showGrammarNote ? "Hide explanation" : "Show explanation"}
+          </button>
+        </div>
+      )}
+
+      {grammarError && <ErrorBanner message={grammarError} />}
+
+      {showGrammarNote && grammarNote && <GrammarNotePanel note={grammarNote} />}
 
       {answerResult && (
         <div className={getResultClass(answerResult)}>

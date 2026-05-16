@@ -46,6 +46,18 @@ export interface Exercise {
   answerOptions?: AnswerOption[];
 }
 
+export interface GrammarNote {
+  id: number;
+  language: string;
+  title: string;
+  topic?: string | null;
+  contentMarkdown: string;
+  examplesJson?: unknown | null;
+  level?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ExerciseSet {
   id: number;
   title: string;

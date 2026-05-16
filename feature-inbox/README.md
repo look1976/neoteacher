@@ -10,21 +10,22 @@ Each file describes one implementation-ready feature area with scope, acceptance
 
 ## Priority Order
 
-1. `03-seed-data-expansion.md`
-2. `04-profile-creation-ui.md`
-3. `05-grammar-notes-learning-ui.md`
-4. `06-exercise-editor.md`
-5. `07-json-import-export.md`
-6. `08-media-upload-and-playback.md`
-7. `09-test-mode.md`
-8. `10-theme-and-ui-foundation.md`
-9. `11-readme-and-dev-workflow.md`
-10. `12-test-coverage.md`
+
+`05-grammar-notes-learning-ui.md`
+`06-exercise-editor.md`
+`07-json-import-export.md`
+`08-media-upload-and-playback.md`
+`09-test-mode.md`
+`11-readme-and-dev-workflow.md`
+`12-test-coverage.md`
 
 ## Implemented
 
-- `implemented/01-frontend-learning-flow.md`
-- `implemented/02-progress-and-spaced-repetition.md`
+`01-frontend-learning-flow.md`
+`02-progress-and-spaced-repetition.md`
+`03-seed-data-expansion.md`
+`04-profile-creation-ui.md`
+`10-theme-and-ui-foundation.md`
 
 ## Current State Summary
 
