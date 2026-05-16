@@ -10,6 +10,9 @@
     "isolatedModules": true,
     "strict": true,
     "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": ["vite/client"],
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],

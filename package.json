@@ -7,7 +7,8 @@
   ],
   "scripts": {
     "dev:frontend": "npm --workspace frontend run dev",
-    "dev:backend": "npm --workspace backend run dev"
+    "dev:backend": "npm --workspace backend run dev",
+    "docker:push": "./scripts/push-to-registry.sh"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

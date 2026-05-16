@@ -51,6 +51,18 @@ NeoTeacher is a self-hosted language learning web application built with React, 
 
    - `http://localhost:4173`
 
+## Docker image publishing
+
+Build and push versioned Docker tags for backend and frontend:
+
+```bash
+cd /home/look/projects/neoteacher
+./scripts/push-to-registry.sh
+```
+
+This script generates a timestamp tag in `YYYYMMDD-HHMMSS` format and pushes both:
+`look1976/neoteacher:backend-<timestamp>` and `look1976/neoteacher:frontend-<timestamp>`.
+
 ## Backend API
 
 The backend exposes the following endpoints:

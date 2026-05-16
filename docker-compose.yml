@@ -15,5 +15,26 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  backend:
+    image: "look1976/neoteacher:backend-${IMAGE_TAG:-latest}"
+    container_name: neoteacher-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "mysql://neoteacher:password@mysql:3306/neoteacher"
+      NODE_ENV: production
+    depends_on:
+      - mysql
+    ports:
+      - "4000:4000"
+
+  frontend:
+    image: "look1976/neoteacher:frontend-${IMAGE_TAG:-latest}"
+    container_name: neoteacher-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
 volumes:
   db_data:
