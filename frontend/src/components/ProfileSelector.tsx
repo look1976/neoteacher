@@ -1,17 +1,63 @@
+import { useState } from "react";
 import type { UserProfile } from "../types";
+import ProfileForm from "./ProfileForm";
 
 interface ProfileSelectorProps {
   profiles: UserProfile[];
   selectedProfileId: number | null;
   onSelect: (profileId: number) => void;
+  onCreate: (payload: { name: string; nativeLanguage: string; targetLanguage: string }) => Promise<UserProfile>;
 }
 
-export default function ProfileSelector({ profiles, selectedProfileId, onSelect }: ProfileSelectorProps) {
+export default function ProfileSelector({ profiles, selectedProfileId, onSelect, onCreate }: ProfileSelectorProps) {
+  const [isCreating, setIsCreating] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
   return (
     <section style={{ marginBottom: 24 }}>
-      <h2>Choose a profile</h2>
-      {profiles.length === 0 ? (
-        <p>No profiles found. Please add a profile in the backend or seed the database.</p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <div>
+          <h2 style={{ margin: 0 }}>Choose a profile</h2>
+          <p style={{ margin: "8px 0 0", color: "#475569" }}>Create or select a profile to continue.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setIsCreating((next) => !next);
+            setFormError(null);
+          }}
+          style={{
+            padding: "0.75rem 1rem",
+            borderRadius: 8,
+            border: "1px solid #0f766e",
+            backgroundColor: isCreating ? "#f0fdf4" : "#0f766e",
+            color: isCreating ? "#0f766e" : "#ffffff",
+            cursor: "pointer",
+          }}
+        >
+          {isCreating ? "Cancel" : "Create profile"}
+        </button>
+      </div>
+
+      {isCreating ? (
+        <ProfileForm
+          onSubmit={async (payload) => {
+            try {
+              setFormError(null);
+              await onCreate(payload);
+              setIsCreating(false);
+            } catch (error) {
+              setFormError(error instanceof Error ? error.message : "Failed to create profile");
+            }
+          }}
+          onCancel={() => {
+            setIsCreating(false);
+            setFormError(null);
+          }}
+          error={formError}
+        />
+      ) : profiles.length === 0 ? (
+        <p>No profiles found. Please create a profile to begin.</p>
       ) : (
         <div style={{ display: "grid", gap: 12 }}>
           {profiles.map((profile) => (

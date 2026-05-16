@@ -5,6 +5,13 @@ export function getProfiles(): Promise<UserProfile[]> {
   return request<UserProfile[]>("/api/profiles");
 }
 
+export function createProfile(payload: { name: string; nativeLanguage: string; targetLanguage: string }): Promise<UserProfile> {
+  return request<UserProfile>("/api/profiles", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getProfile(id: number): Promise<UserProfile> {
   return request<UserProfile>(`/api/profiles/${id}`);
 }
