@@ -1,23 +1,23 @@
 FROM node:20-alpine AS builder
-WORKDIR /app
+WORKDIR /app/backend
 
-COPY package.json package-lock.json* ./
+COPY backend/package.json backend/package-lock.json* ./
+COPY tsconfig.json /app/tsconfig.json
+COPY backend/tsconfig.json ./tsconfig.json
+COPY backend/prisma ./prisma
+COPY backend/src ./src
+
 RUN npm install
-
-COPY tsconfig.json ./
-COPY prisma ./prisma
-COPY src ./src
-
 RUN npm run build
 
 FROM node:20-alpine AS runner
-WORKDIR /app
+WORKDIR /app/backend
 
-COPY package.json package-lock.json* ./
+COPY backend/package.json backend/package-lock.json* ./
 RUN npm install --production
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/backend/dist ./dist
+COPY --from=builder /app/backend/prisma ./prisma
 
 ENV NODE_ENV=production
 EXPOSE 4000
