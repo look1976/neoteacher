@@ -1,130 +1,146 @@
-Chcę zbudować od zera aplikację do nauki języków obcych inspirowaną klasycznym programem eTeacher z lat 90., ale w nowoczesnej formie.
+I want to build a foreign language learning application from scratch, inspired by the classic eTeacher program from the 1990s, but in a modern form.
 
-Napisz kompletną aplikację webową typu single-page app z backendem i bazą danych. Aplikacja ma działać lokalnie lub self-hosted, bez konieczności korzystania z usług chmurowych. Celem jest stworzenie multimedialnego trenażera językowego, a nie pełnego kursu „lekcja po lekcji”.
+Create a complete single-page web application with a backend and a database. The application must work locally or in a self-hosted environment, without requiring cloud services. The goal is to build a multimedia language training tool, not a complete step-by-step course.
 
-Najważniejsza idea programu:
-- użytkownik ćwiczy słownictwo, gramatykę, tłumaczenia i rozumienie zdań,
-- program sprawdza odpowiedzi,
-- zapamiętuje wyniki,
-- powtarza błędne lub słabo opanowane pytania,
-- pozwala tworzyć własne ćwiczenia,
-- obsługuje różne języki, początkowo angielski,
-- działa jak lokalne „laboratorium ćwiczeń językowych”.
+The main idea of the program:
 
-Nazwa aplikacji: NeoTeacher.
+- the user practices vocabulary, grammar, translations and sentence comprehension,
+- the program checks answers,
+- the program stores results,
+- the program repeats incorrect or weakly mastered questions,
+- the user can create custom exercises,
+- the application supports multiple languages, initially English,
+- the application works as a local “language practice laboratory”.
 
-────────────────────────────────────
-1. GŁÓWNE ZAŁOŻENIA
-────────────────────────────────────
-
-Aplikacja ma zawierać:
-
-1. System użytkowników/profili ucznia
-   - użytkownik wybiera istniejący profil lub tworzy nowy,
-   - każdy profil ma osobne postępy, ustawienia i statystyki,
-   - nie musi być pełnego systemu logowania online; wystarczy lokalny system profili,
-   - opcjonalnie można dodać prosty login/hasło.
-
-2. Panel główny ucznia
-   - widok ostatnich ćwiczeń,
-   - poziom zaawansowania,
-   - liczba wykonanych ćwiczeń,
-   - procent poprawnych odpowiedzi,
-   - lista tematów do powtórki,
-   - szybki przycisk „Kontynuuj naukę”,
-   - szybki przycisk „Powtórz błędy”.
-
-3. Moduły nauki:
-   - Słownictwo,
-   - Gramatyka,
-   - Tłumaczenia,
-   - Testy mieszane,
-   - Ćwiczenia obrazkowe,
-   - Ćwiczenia audio,
-   - Powtórki błędów,
-   - Tryb egzaminacyjny.
-
-4. Dwa podstawowe tryby:
-   - Tryb nauki:
-     - można używać podpowiedzi,
-     - program może pokazywać wyjaśnienia,
-     - błędne odpowiedzi wracają po kilku pytaniach,
-     - po poprawce pytanie może zostać częściowo zaliczone.
-   - Tryb testu:
-     - brak podpowiedzi,
-     - ograniczony czas opcjonalnie,
-     - wynik liczony bardziej rygorystycznie,
-     - po zakończeniu pokazuje raport.
-
-5. System powtórek:
-   - pytania, na które użytkownik odpowiedział źle, trafiają do kolejki powtórek,
-   - pytania trudne wracają częściej,
-   - pytania łatwe wracają rzadziej,
-   - zaimplementuj prosty algorytm spaced repetition,
-   - każde pytanie ma poziom opanowania od 0 do 5,
-   - poziom rośnie po poprawnych odpowiedziach,
-   - poziom spada po błędnych odpowiedziach.
-
-6. Edytor ćwiczeń:
-   - użytkownik może tworzyć własne zestawy ćwiczeń,
-   - może dodawać pytania, odpowiedzi, warianty odpowiedzi,
-   - może dodawać obrazki,
-   - może dodawać pliki audio,
-   - może oznaczać poziom trudności,
-   - może przypisać kategorię, temat, język i typ ćwiczenia,
-   - może importować/exportować zestawy ćwiczeń jako JSON.
-
-7. Multimedialność:
-   - obsługa obrazków dla pytań obrazkowych,
-   - obsługa plików audio dla wymowy,
-   - przycisk odtworzenia nagrania,
-   - możliwość automatycznego odtworzenia audio po wyświetleniu pytania,
-   - obrazki i audio mogą być lokalnymi plikami przechowywanymi w katalogu aplikacji lub jako upload.
-
-8. Pomoc gramatyczna:
-   - osobny moduł „Gramatyka” z krótkimi opisami zagadnień,
-   - możliwość powiązania pytania z konkretną notatką gramatyczną,
-   - w trybie nauki można kliknąć „Wyjaśnij regułę”,
-   - w trybie testu ta opcja może być wyłączona.
+Application name: NeoTeacher.
 
 ────────────────────────────────────
-2. TECHNOLOGIA
+1. MAIN ASSUMPTIONS
 ────────────────────────────────────
 
-Zaproponuj i zaimplementuj aplikację w następującym stacku:
+The application should include:
+
+1. User/student profile system
+
+   - the user selects an existing profile or creates a new one,
+   - each profile has separate progress, settings and statistics,
+   - a full online login system is not required; a local profile system is enough,
+   - optionally, a simple username/password login may be added.
+
+2. Student dashboard
+
+   - view of recent exercises,
+   - proficiency level,
+   - number of completed exercises,
+   - percentage of correct answers,
+   - list of topics to review,
+   - quick “Continue learning” button,
+   - quick “Repeat mistakes” button.
+
+3. Learning modules
+
+   - Vocabulary,
+   - Grammar,
+   - Translations,
+   - Mixed tests,
+   - Picture exercises,
+   - Audio exercises,
+   - Mistake reviews,
+   - Exam mode.
+
+4. Two basic modes
+
+   - Learning mode:
+     - hints may be used,
+     - the program may show explanations,
+     - incorrect answers return after a few questions,
+     - after correction, a question may be partially credited.
+
+   - Test mode:
+     - no hints,
+     - optional time limit,
+     - scoring is stricter,
+     - a report is shown after completion.
+
+5. Review system
+
+   - questions answered incorrectly are added to the review queue,
+   - difficult questions return more often,
+   - easy questions return less often,
+   - implement a simple spaced repetition algorithm,
+   - each question has a mastery level from 0 to 5,
+   - the mastery level increases after correct answers,
+   - the mastery level decreases after incorrect answers.
+
+6. Exercise editor
+
+   - the user can create custom exercise sets,
+   - the user can add questions, answers and answer variants,
+   - the user can add images,
+   - the user can add audio files,
+   - the user can assign a difficulty level,
+   - the user can assign category, topic, language and exercise type,
+   - the user can import/export exercise sets as JSON.
+
+7. Multimedia support
+
+   - support images for picture-based questions,
+   - support audio files for pronunciation,
+   - button for playing recordings,
+   - optional automatic audio playback after displaying a question,
+   - images and audio can be local files stored in the application directory or uploaded by the user.
+
+8. Grammar help
+
+   - a separate “Grammar” module with short explanations of grammar topics,
+   - ability to link a question to a specific grammar note,
+   - in learning mode, the user can click “Explain the rule”,
+   - in test mode, this option may be disabled.
+
+────────────────────────────────────
+2. TECHNOLOGY
+────────────────────────────────────
+
+Propose and implement the application using the following stack:
 
 Frontend:
+
 - React,
 - TypeScript,
 - Vite,
 - Tailwind CSS,
-- shadcn/ui lub własne proste komponenty,
-- responsywny layout,
-- ciemny/jasny motyw.
+- shadcn/ui or simple custom components,
+- responsive layout,
+- dark/light theme.
 
 Backend:
+
 - Node.js,
-- Express lub Fastify,
+- Express or Fastify,
 - TypeScript,
 - REST API.
 
-Baza danych:
+Database:
+
 - MySQL,
 - Prisma ORM.
 
-Przechowywanie plików:
-- lokalny folder `uploads/`,
-- osobne podfoldery:
+File storage:
+
+- local `uploads/` folder,
+- separate subfolders:
   - `uploads/images/`,
   - `uploads/audio/`.
 
-Uruchamianie:
-- aplikacja ma działać lokalnie przez `npm install` i `npm run dev`,
-- przygotuj też Dockerfile i docker-compose.yml,
-- backend i frontend mogą być osobnymi usługami albo jednym monorepo.
+Running the application:
 
-Struktura projektu:
-- użyj monorepo:
+- the application should run locally using `npm install` and `npm run dev`,
+- also prepare a Dockerfile and `docker-compose.yml`,
+- backend and frontend may be separate services or part of one monorepo.
+
+Project structure:
+
+- use a monorepo:
 
 /neoteacher
   /frontend
@@ -135,12 +151,13 @@ Struktura projektu:
   README.md
 
 ────────────────────────────────────
-3. MODEL DANYCH
+3. DATA MODEL
 ────────────────────────────────────
 
-Zaprojektuj bazę danych z następującymi encjami:
+Design the database with the following entities:
 
 UserProfile:
+
 - id
 - name
 - nativeLanguage
@@ -149,11 +166,13 @@ UserProfile:
 - lastUsedAt
 
 Language:
+
 - id
 - code
 - name
 
 ExerciseSet:
+
 - id
 - title
 - description
@@ -167,6 +186,7 @@ ExerciseSet:
 - updatedAt
 
 Exercise:
+
 - id
 - exerciseSetId
 - type
@@ -183,7 +203,8 @@ Exercise:
 - createdAt
 - updatedAt
 
-ExerciseType powinien obsługiwać:
+ExerciseType should support:
+
 - multiple_choice
 - picture_choice
 - text_translation
@@ -197,6 +218,7 @@ ExerciseType powinien obsługiwać:
 - dictation
 
 AnswerOption:
+
 - id
 - exerciseId
 - text
@@ -206,6 +228,7 @@ AnswerOption:
 - sortOrder
 
 GrammarNote:
+
 - id
 - language
 - title
@@ -215,6 +238,7 @@ GrammarNote:
 - level
 
 UserExerciseProgress:
+
 - id
 - userProfileId
 - exerciseId
@@ -229,6 +253,7 @@ UserExerciseProgress:
 - intervalDays
 
 TestSession:
+
 - id
 - userProfileId
 - mode
@@ -239,6 +264,7 @@ TestSession:
 - scorePercent
 
 TestSessionAnswer:
+
 - id
 - testSessionId
 - exerciseId
@@ -249,6 +275,7 @@ TestSessionAnswer:
 - answeredAt
 
 Settings:
+
 - id
 - userProfileId
 - autoPlayAudio
@@ -258,47 +285,57 @@ Settings:
 - theme
 
 ────────────────────────────────────
-4. SPRAWDZANIE ODPOWIEDZI
+4. ANSWER CHECKING
 ────────────────────────────────────
 
-Zaimplementuj inteligentne, ale proste sprawdzanie odpowiedzi.
+Implement intelligent but simple answer checking.
 
-Wymagania:
-- ignorowanie wielkości liter,
-- ignorowanie nadmiarowych spacji,
-- opcjonalne ignorowanie interpunkcji,
-- możliwość wielu poprawnych odpowiedzi,
-- możliwość akceptowalnych wariantów odpowiedzi,
-- możliwość oznaczenia elementów opcjonalnych.
+Requirements:
 
-Przykład:
-Poprawna odpowiedź:
+- ignore letter case,
+- ignore extra spaces,
+- optionally ignore punctuation,
+- allow multiple correct answers,
+- allow acceptable answer variants,
+- allow optional elements.
+
+Example:
+
+Correct answer:
+
 "I have got a car"
 
-Akceptowane warianty:
+Accepted variants:
+
 "I've got a car"
+
 "I have a car"
+
 "I have got one car"
 
-Zaprojektuj format zapisu wariantów odpowiedzi.
+Design a format for storing answer variants.
 
-Możesz użyć na przykład:
-- tablicy `correctAnswers`,
-- tablicy `acceptableAnswers`,
-- prostego mini-syntaxu:
-  - `[word]` oznacza słowo opcjonalne,
-  - `word1/word2` oznacza alternatywę,
-  - `(formal)` jako komentarz ignorowany przez sprawdzarkę.
+You may use, for example:
 
-Przykład:
+- a `correctAnswers` array,
+- an `acceptableAnswers` array,
+- a simple mini-syntax:
+  - `[word]` means an optional word,
+  - `word1/word2` means an alternative,
+  - `(formal)` means a comment ignored by the checker.
+
+Example:
+
 "I have [got] a car"
+
 "I have got a car/I've got a car"
 
-Zaimplementuj funkcję:
+Implement the function:
 
 checkAnswer(userAnswer, exercise): AnswerCheckResult
 
 AnswerCheckResult:
+
 - isCorrect: boolean
 - normalizedUserAnswer: string
 - matchedAnswer: string | null
@@ -306,215 +343,239 @@ AnswerCheckResult:
 - feedback: string
 - almostCorrect: boolean
 
-Dodaj obsługę odpowiedzi „prawie poprawnej”:
-- jeżeli różnica Levenshteina jest niewielka,
-- jeżeli brakuje tylko interpunkcji,
-- jeżeli literówka jest mała,
-- wtedy pokaż komunikat „Prawie dobrze, sprawdź pisownię”.
+Add support for “almost correct” answers:
 
-Nie akceptuj jednak błędnych tłumaczeń tylko dlatego, że są podobne znakowo.
+- if the Levenshtein distance is small,
+- if only punctuation is missing,
+- if there is a small typo,
+- then show the message “Almost correct, check your spelling.”
+
+However, do not accept incorrect translations only because they are textually similar.
 
 ────────────────────────────────────
-5. RODZAJE ĆWICZEŃ
+5. EXERCISE TYPES
 ────────────────────────────────────
 
-Zaimplementuj komponenty frontendowe dla każdego typu ćwiczeń.
+Implement frontend components for each exercise type.
 
 1. Multiple choice
-   - pytanie tekstowe,
-   - kilka odpowiedzi,
-   - jedna lub wiele poprawnych,
-   - natychmiastowy feedback w trybie nauki.
+
+   - text question,
+   - several answers,
+   - one or more correct answers,
+   - immediate feedback in learning mode.
 
 2. Picture choice
-   - pytanie tekstowe lub audio,
-   - odpowiedzi jako obrazki,
-   - kliknięcie obrazka wybiera odpowiedź.
+
+   - text or audio question,
+   - answers shown as images,
+   - clicking an image selects the answer.
 
 3. Text translation
-   - użytkownik wpisuje tłumaczenie pojedynczego słowa lub frazy,
-   - sprawdzane są warianty.
+
+   - the user enters the translation of a single word or phrase,
+   - answer variants are checked.
 
 4. Sentence translation
-   - użytkownik tłumaczy całe zdanie,
-   - sprawdzane są warianty,
-   - po błędzie pokazuje się wzorcowa odpowiedź.
+
+   - the user translates a full sentence,
+   - answer variants are checked,
+   - after an error, the model answer is shown.
 
 5. Fill gap
-   - zdanie z luką,
-   - użytkownik wpisuje brakujące słowo,
-   - możliwość kilku luk.
+
+   - sentence with a gap,
+   - the user enters the missing word,
+   - support for multiple gaps.
 
 6. Transform sentence
-   - np. zamień zdanie twierdzące na pytanie,
-   - zamień czas Present Simple na Past Simple,
-   - zamień stronę czynną na bierną.
+
+   - for example, change a positive sentence into a question,
+   - change Present Simple into Past Simple,
+   - change active voice into passive voice.
 
 7. Build question
-   - z podanego zdania użytkownik układa pytanie.
+
+   - the user builds a question from the provided sentence.
 
 8. Order words
-   - użytkownik układa zdanie z rozsypanych słów,
-   - drag & drop albo klikane kafelki.
+
+   - the user arranges a sentence from shuffled words,
+   - drag & drop or clickable tiles.
 
 9. Match pairs
-   - łączenie par:
-     - słowo - tłumaczenie,
-     - obrazek - słowo,
-     - zdanie - tłumaczenie.
+
+   - matching pairs:
+     - word - translation,
+     - image - word,
+     - sentence - translation.
 
 10. Listening
-   - użytkownik słucha audio i wybiera odpowiedź.
+
+   - the user listens to audio and selects an answer.
 
 11. Dictation
-   - użytkownik słucha audio i wpisuje usłyszane zdanie.
+
+   - the user listens to audio and types the sentence they heard.
 
 ────────────────────────────────────
-6. TRYB NAUKI
+6. LEARNING MODE
 ────────────────────────────────────
 
-Tryb nauki powinien działać tak:
+Learning mode should work as follows:
 
-- użytkownik wybiera:
-  - język,
-  - zestaw ćwiczeń,
-  - kategorię,
-  - typ ćwiczenia,
-  - poziom trudności,
-  - liczbę pytań.
+- the user selects:
+  - language,
+  - exercise set,
+  - category,
+  - exercise type,
+  - difficulty level,
+  - number of questions.
 
-- aplikacja buduje sesję ćwiczeń,
-- pytania są losowane z preferencją:
-  - nowych pytań,
-  - pytań z niskim masteryLevel,
-  - pytań po terminie powtórki,
-  - pytań ostatnio błędnych.
+- the application builds an exercise session,
+- questions are selected with preference for:
+  - new questions,
+  - questions with low masteryLevel,
+  - questions due for review,
+  - questions recently answered incorrectly.
 
-W trakcie ćwiczenia:
-- pokaż pytanie,
-- pokaż obrazek/audio, jeśli istnieje,
-- pozwól odpowiedzieć,
-- sprawdź odpowiedź,
-- pokaż feedback,
-- pokaż wyjaśnienie,
-- pokaż link do gramatyki, jeśli istnieje,
-- przy błędzie dodaj pytanie do kolejki powtórki w tej samej sesji,
-- po kilku pytaniach pokaż błędne pytanie ponownie.
+During the exercise:
 
-Na końcu:
-- pokaż wynik,
-- pokaż pytania błędne,
-- pokaż pytania opanowane,
-- pokaż rekomendację:
-  - „Powtórz czas Present Perfect”
-  - „Poćwicz słownictwo: podróże”
-  - „Masz 12 pytań do powtórki jutro”.
+- show the question,
+- show image/audio if available,
+- allow the user to answer,
+- check the answer,
+- show feedback,
+- show explanation,
+- show a grammar link if available,
+- after an incorrect answer, add the question to the repeat queue in the same session,
+- after a few questions, show the incorrect question again.
 
-────────────────────────────────────
-7. TRYB TESTU
-────────────────────────────────────
+At the end:
 
-Tryb testu powinien:
-
-- umożliwiać wybór zakresu,
-- mieć opcjonalny limit czasu,
-- nie pokazywać podpowiedzi,
-- nie pokazywać wyniku natychmiast, chyba że użytkownik tak ustawi,
-- na końcu pokazywać raport:
-  - wynik procentowy,
-  - liczba poprawnych,
-  - liczba błędnych,
-  - czas,
-  - lista pytań i odpowiedzi,
-  - sugerowane powtórki.
-
-TestSession i TestSessionAnswer muszą być zapisane w bazie.
+- show the result,
+- show incorrect questions,
+- show mastered questions,
+- show a recommendation:
+  - “Review Present Perfect”
+  - “Practice vocabulary: travel”
+  - “You have 12 questions to review tomorrow.”
 
 ────────────────────────────────────
-8. ALGORYTM POWTÓREK
+7. TEST MODE
 ────────────────────────────────────
 
-Zaimplementuj prosty algorytm powtórek.
+Test mode should:
 
-Każde pytanie ma:
-- masteryLevel od 0 do 5,
+- allow scope selection,
+- have an optional time limit,
+- not show hints,
+- not show the result immediately unless the user configures it,
+- show a report at the end:
+  - percentage score,
+  - number of correct answers,
+  - number of incorrect answers,
+  - time,
+  - list of questions and answers,
+  - suggested reviews.
+
+TestSession and TestSessionAnswer must be stored in the database.
+
+────────────────────────────────────
+8. REVIEW ALGORITHM
+────────────────────────────────────
+
+Implement a simple review algorithm.
+
+Each question has:
+
+- masteryLevel from 0 to 5,
 - easeFactor,
 - intervalDays,
 - nextReviewAt.
 
-Po poprawnej odpowiedzi:
-- zwiększ masteryLevel maksymalnie do 5,
-- zwiększ intervalDays:
-  - mastery 0 → 1 dzień,
-  - mastery 1 → 2 dni,
-  - mastery 2 → 4 dni,
-  - mastery 3 → 7 dni,
-  - mastery 4 → 14 dni,
-  - mastery 5 → 30 dni.
+After a correct answer:
 
-Po błędnej odpowiedzi:
-- zmniejsz masteryLevel,
-- ustaw nextReviewAt na dzisiaj albo jutro,
-- dodaj pytanie do kolejki „repeat in session”.
+- increase masteryLevel up to a maximum of 5,
+- increase intervalDays:
+  - mastery 0 → 1 day,
+  - mastery 1 → 2 days,
+  - mastery 2 → 4 days,
+  - mastery 3 → 7 days,
+  - mastery 4 → 14 days,
+  - mastery 5 → 30 days.
+
+After an incorrect answer:
+
+- decrease masteryLevel,
+- set nextReviewAt to today or tomorrow,
+- add the question to the “repeat in session” queue.
 
 Learning intensity:
-- 1 = łagodnie, pytanie zaliczone po jednej dobrej odpowiedzi,
-- 2 = standard, pytanie musi być poprawne 2 razy,
-- 3 = intensywnie, pytanie musi być poprawne 3 razy w różnych sesjach.
+
+- 1 = easy, the question is credited after one correct answer,
+- 2 = standard, the question must be answered correctly 2 times,
+- 3 = intensive, the question must be answered correctly 3 times in different sessions.
 
 ────────────────────────────────────
-9. EDYTOR ĆWICZEŃ
+9. EXERCISE EDITOR
 ────────────────────────────────────
 
-Stwórz moduł administracyjny / edytor treści.
+Create an admin/content editor module.
 
-Funkcje:
-- lista zestawów ćwiczeń,
-- tworzenie zestawu,
-- edycja zestawu,
-- usuwanie zestawu,
-- dodawanie ćwiczenia,
-- podgląd ćwiczenia,
-- testowe sprawdzenie odpowiedzi,
-- upload obrazka,
+Features:
+
+- list exercise sets,
+- create an exercise set,
+- edit an exercise set,
+- delete an exercise set,
+- add an exercise,
+- preview an exercise,
+- test answer checking,
+- upload an image,
 - upload audio,
-- edycja odpowiedzi alternatywnych,
+- edit alternative answers,
 - import JSON,
 - export JSON.
 
-Edytor powinien mieć wygodny formularz zależny od typu ćwiczenia.
+The editor should have a convenient form that depends on the exercise type.
 
-Dla multiple_choice:
-- pytanie,
-- odpowiedzi,
-- oznaczenie poprawnych.
+For multiple_choice:
 
-Dla fill_gap:
-- zdanie z luką, np.:
+- question,
+- answers,
+- marking correct answers.
+
+For fill_gap:
+
+- sentence with a gap, for example:
   "I ____ to school every day."
-- poprawne odpowiedzi:
+- correct answers:
   "go"
 
-Dla order_words:
-- zdanie docelowe,
-- automatyczne rozbicie na kafelki,
-- możliwość dodania fałszywych słów.
+For order_words:
 
-Dla match_pairs:
-- lista par.
+- target sentence,
+- automatic split into tiles,
+- ability to add distractor words.
 
-Dla listening/dictation:
-- upload audio,
-- tekst referencyjny,
-- warianty odpowiedzi.
+For match_pairs:
+
+- list of pairs.
+
+For listening/dictation:
+
+- audio upload,
+- reference text,
+- answer variants.
 
 ────────────────────────────────────
-10. IMPORT/EXPORT JSON
+10. JSON IMPORT/EXPORT
 ────────────────────────────────────
 
-Zaprojektuj czytelny format JSON dla zestawów ćwiczeń.
+Design a readable JSON format for exercise sets.
 
-Przykład:
+Example:
 
 {
   "title": "English Basics - Present Simple",
@@ -550,35 +611,39 @@ Przykład:
   ]
 }
 
-Dodaj walidację importu:
-- wymagane pola,
-- obsługiwane typy ćwiczeń,
-- poprawny format odpowiedzi,
-- raport błędów importu.
+Add import validation:
+
+- required fields,
+- supported exercise types,
+- correct answer format,
+- import error report.
 
 ────────────────────────────────────
-11. PRZYKŁADOWE DANE
+11. SAMPLE DATA
 ────────────────────────────────────
 
-Wygeneruj przykładowy pakiet danych dla języka angielskiego.
+Generate a sample data package for English.
 
-Ma zawierać:
-- minimum 5 zestawów ćwiczeń:
+It should include:
+
+- at least 5 exercise sets:
   1. Basic vocabulary: home
   2. Basic vocabulary: travel
   3. Present Simple
   4. Past Simple
   5. Questions and negatives
 
-Każdy zestaw:
-- minimum 20 ćwiczeń,
-- mieszane typy ćwiczeń,
-- poziom A1/A2,
-- polskie polecenia,
-- angielskie odpowiedzi,
-- przykładowe wyjaśnienia.
+Each set:
 
-Dodaj też kilka notatek gramatycznych:
+- at least 20 exercises,
+- mixed exercise types,
+- A1/A2 level,
+- Polish instructions,
+- English answers,
+- sample explanations.
+
+Also add several grammar notes:
+
 - Present Simple,
 - Past Simple,
 - Articles: a/an/the,
@@ -589,79 +654,90 @@ Dodaj też kilka notatek gramatycznych:
 12. UI / UX
 ────────────────────────────────────
 
-Styl aplikacji:
-- nowoczesny, ale z lekkim retro-klimatem edukacyjnych programów z lat 90.,
-- czytelne karty,
-- duże przyciski,
-- prosty layout,
-- mało rozpraszaczy,
-- tryb jasny i ciemny.
+Application style:
 
-Widoki aplikacji:
+- modern, but with a slight retro feel inspired by educational programs from the 1990s,
+- readable cards,
+- large buttons,
+- simple layout,
+- minimal distractions,
+- light and dark mode.
 
-1. Wybór profilu
-   - lista profili,
-   - dodaj profil,
-   - ostatnio używany profil na górze.
+Application views:
+
+1. Profile selection
+
+   - profile list,
+   - add profile,
+   - most recently used profile at the top.
 
 2. Dashboard
-   - postęp,
-   - szybkie akcje,
-   - dzisiejsze powtórki,
-   - ostatnie wyniki.
 
-3. Biblioteka ćwiczeń
-   - filtrowanie po języku,
-   - poziomie,
-   - kategorii,
-   - typie ćwiczenia,
-   - tagach.
+   - progress,
+   - quick actions,
+   - today’s reviews,
+   - recent results.
 
-4. Sesja nauki
-   - pytanie,
-   - odpowiedź,
-   - audio/obrazek,
+3. Exercise library
+
+   - filtering by language,
+   - level,
+   - category,
+   - exercise type,
+   - tags.
+
+4. Learning session
+
+   - question,
+   - answer,
+   - audio/image,
    - feedback,
-   - przyciski:
-     - Sprawdź,
-     - Podpowiedź,
-     - Pokaż regułę,
-     - Następne.
+   - buttons:
+     - Check,
+     - Hint,
+     - Show rule,
+     - Next.
 
-5. Wynik sesji
-   - wynik procentowy,
-   - pytania błędne,
-   - rekomendacje,
-   - przycisk „Powtórz błędy”.
+5. Session result
 
-6. Tryb testu
-   - podobny do trybu nauki, ale bez podpowiedzi.
+   - percentage score,
+   - incorrect questions,
+   - recommendations,
+   - “Repeat mistakes” button.
 
-7. Edytor ćwiczeń
-   - CRUD zestawów i pytań.
+6. Test mode
 
-8. Gramatyka
-   - lista tematów,
-   - widok notatki Markdown,
-   - przykłady.
+   - similar to learning mode, but without hints.
 
-9. Statystyki
-   - wykresy:
-     - poprawność w czasie,
-     - liczba ćwiczeń dziennie,
-     - najmocniejsze tematy,
-     - najsłabsze tematy,
-     - pytania do powtórki.
+7. Exercise editor
+
+   - CRUD for sets and questions.
+
+8. Grammar
+
+   - topic list,
+   - Markdown note view,
+   - examples.
+
+9. Statistics
+
+   - charts:
+     - accuracy over time,
+     - number of exercises per day,
+     - strongest topics,
+     - weakest topics,
+     - questions due for review.
 
 ────────────────────────────────────
-13. API BACKENDU
+13. BACKEND API
 ────────────────────────────────────
 
-Zaprojektuj REST API.
+Design a REST API.
 
-Endpointy przykładowe:
+Example endpoints:
 
 Profiles:
+
 - GET /api/profiles
 - POST /api/profiles
 - GET /api/profiles/:id
@@ -669,6 +745,7 @@ Profiles:
 - DELETE /api/profiles/:id
 
 Exercise sets:
+
 - GET /api/exercise-sets
 - POST /api/exercise-sets
 - GET /api/exercise-sets/:id
@@ -676,6 +753,7 @@ Exercise sets:
 - DELETE /api/exercise-sets/:id
 
 Exercises:
+
 - GET /api/exercises
 - POST /api/exercises
 - GET /api/exercises/:id
@@ -683,6 +761,7 @@ Exercises:
 - DELETE /api/exercises/:id
 
 Sessions:
+
 - POST /api/sessions/learning/start
 - POST /api/sessions/test/start
 - POST /api/sessions/:id/answer
@@ -690,11 +769,13 @@ Sessions:
 - GET /api/sessions/:id/report
 
 Progress:
+
 - GET /api/profiles/:id/progress
 - GET /api/profiles/:id/reviews
 - POST /api/profiles/:id/reviews/start
 
 Grammar:
+
 - GET /api/grammar-notes
 - POST /api/grammar-notes
 - GET /api/grammar-notes/:id
@@ -702,73 +783,79 @@ Grammar:
 - DELETE /api/grammar-notes/:id
 
 Import/export:
+
 - POST /api/import/exercise-set
 - GET /api/export/exercise-set/:id
 
 Uploads:
+
 - POST /api/uploads/image
 - POST /api/uploads/audio
 
 ────────────────────────────────────
-14. BEZPIECZEŃSTWO I WALIDACJA
+14. SECURITY AND VALIDATION
 ────────────────────────────────────
 
-Zadbaj o:
-- walidację danych wejściowych przy pomocy Zod,
-- ograniczenie typów uploadowanych plików:
-  - obrazki: png, jpg, jpeg, gif, webp,
+Take care of:
+
+- input validation using Zod,
+- restricting uploaded file types:
+  - images: png, jpg, jpeg, gif, webp,
   - audio: mp3, wav, ogg,
-- limit wielkości pliku,
-- bezpieczne generowanie nazw plików,
-- brak wykonywania dowolnego kodu z importowanego JSON,
-- sensowne komunikaty błędów.
+- file size limits,
+- safe filename generation,
+- no execution of arbitrary code from imported JSON,
+- sensible error messages.
 
 ────────────────────────────────────
-15. TESTY
+15. TESTS
 ────────────────────────────────────
 
-Dodaj testy jednostkowe dla:
+Add unit tests for:
 
 - checkAnswer,
-- normalizacji odpowiedzi,
-- obsługi alternatywnych odpowiedzi,
-- obsługi słów opcjonalnych,
-- algorytmu powtórek,
-- importu JSON,
-- generowania sesji nauki.
+- answer normalization,
+- handling answer alternatives,
+- handling optional words,
+- review algorithm,
+- JSON import,
+- learning session generation.
 
-Użyj Vitest albo Jest.
+Use Vitest or Jest.
 
-Dodaj przykładowe testy:
+Add example tests:
 
-1. "I have got a car" akceptuje:
+1. "I have got a car" accepts:
+
    - "I have got a car"
    - "I've got a car"
    - "I have a car"
 
-2. "She drinks coffee every day" odrzuca:
+2. "She drinks coffee every day" rejects:
+
    - "She drink coffee every day"
 
 3. Fill gap:
-   - "drinks" poprawne,
-   - "drink" błędne dla he/she/it.
+
+   - "drinks" is correct,
+   - "drink" is incorrect for he/she/it.
 
 ────────────────────────────────────
-16. DOKUMENTACJA
+16. DOCUMENTATION
 ────────────────────────────────────
 
-Wygeneruj README.md z instrukcją:
+Generate a README.md with instructions:
 
-- wymagania,
-- instalacja lokalna,
-- uruchomienie frontend/backend,
-- uruchomienie przez Docker Compose,
-- seedowanie przykładowych danych,
-- jak tworzyć własne ćwiczenia,
-- jak importować/exportować JSON,
-- jak działa algorytm powtórek.
+- requirements,
+- local installation,
+- running frontend/backend,
+- running with Docker Compose,
+- seeding sample data,
+- how to create custom exercises,
+- how to import/export JSON,
+- how the review algorithm works.
 
-Dodaj dokumentację techniczną w katalogu `/docs`:
+Add technical documentation in the `/docs` directory:
 
 - architecture.md
 - database-schema.md
@@ -777,83 +864,85 @@ Dodaj dokumentację techniczną w katalogu `/docs`:
 - development-roadmap.md
 
 ────────────────────────────────────
-17. OCZEKIWANY SPOSÓB PRACY
+17. EXPECTED WORKFLOW
 ────────────────────────────────────
 
-Pracuj iteracyjnie.
+Work iteratively.
 
-Najpierw wygeneruj:
-1. strukturę projektu,
-2. schemat bazy Prisma,
-3. podstawowy backend,
-4. podstawowy frontend,
-5. seed przykładowych danych,
-6. działający tryb nauki dla kilku typów ćwiczeń,
-7. potem edytor,
-8. potem statystyki,
-9. potem import/export,
-10. potem Docker.
+First generate:
 
-Nie próbuj robić wszystkiego w jednym pliku.
+1. project structure,
+2. Prisma database schema,
+3. basic backend,
+4. basic frontend,
+5. sample data seed,
+6. working learning mode for several exercise types,
+7. then the editor,
+8. then statistics,
+9. then import/export,
+10. then Docker.
 
-Kod ma być czytelny, modularny i gotowy do dalszego rozwijania.
+Do not try to put everything in one file.
+
+The code should be readable, modular and ready for further development.
 
 ────────────────────────────────────
-18. MINIMALNY MVP
+18. MINIMAL MVP
 ────────────────────────────────────
 
-Jeśli trzeba zacząć od MVP, zaimplementuj najpierw:
+If you need to start with an MVP, implement first:
 
-- profile użytkowników,
+- user profiles,
 - MySQL + Prisma,
-- lista zestawów ćwiczeń,
-- seed przykładowych ćwiczeń,
-- tryb nauki,
-- sprawdzanie odpowiedzi tekstowych,
+- exercise set list,
+- sample exercise seed,
+- learning mode,
+- text answer checking,
 - multiple choice,
 - fill gap,
 - sentence translation,
-- progress użytkownika,
-- powtarzanie błędnych odpowiedzi,
-- prosty dashboard.
+- user progress,
+- repeating incorrect answers,
+- simple dashboard.
 
-Dopiero potem rozszerzaj o:
+Only then extend with:
+
 - audio,
-- obrazki,
-- edytor ćwiczeń,
+- images,
+- exercise editor,
 - import/export,
-- statystyki,
-- tryb testu,
-- notatki gramatyczne.
+- statistics,
+- test mode,
+- grammar notes.
 
 ────────────────────────────────────
-19. WAŻNE WYMAGANIA JAKOŚCIOWE
+19. IMPORTANT QUALITY REQUIREMENTS
 ────────────────────────────────────
 
-- Nie używaj mocków tam, gdzie można od razu użyć MySQL.
-- Nie zapisuj postępów tylko w localStorage.
-- Nie twórz wyłącznie statycznego frontendu.
-- Backend, baza i frontend mają realnie działać razem.
-- Każdy endpoint powinien mieć obsługę błędów.
-- Każdy formularz powinien mieć walidację.
-- UI ma być prosty, szybki i wygodny.
-- Aplikacja ma być łatwa do uruchomienia lokalnie.
-- Projekt ma mieć sensowny README.
+- Do not use mocks where MySQL can be used immediately.
+- Do not store progress only in localStorage.
+- Do not create only a static frontend.
+- Backend, database and frontend must actually work together.
+- Every endpoint should have error handling.
+- Every form should have validation.
+- UI should be simple, fast and convenient.
+- The application should be easy to run locally.
+- The project should have a sensible README.
 
 ────────────────────────────────────
-20. FINALNY CEL
+20. FINAL GOAL
 ────────────────────────────────────
 
-Końcowy efekt ma być nowoczesnym odpowiednikiem klasycznego programu eTeacher:
+The final result should be a modern equivalent of the classic eTeacher program:
 
-- lokalny/self-hosted,
-- multimedialny,
-- wielojęzyczny,
-- z własnymi zestawami ćwiczeń,
-- z trybem nauki i testu,
-- z powtórkami błędów,
-- z zapisem postępów,
-- z gramatyką jako pomocą,
-- z możliwością dalszego rozwoju w kierunku AI-asystenta.
+- local/self-hosted,
+- multimedia-based,
+- multilingual,
+- with custom exercise sets,
+- with learning mode and test mode,
+- with mistake reviews,
+- with saved progress,
+- with grammar as help,
+- with the possibility of further development toward an AI assistant.
 
-Rozpocznij od wygenerowania struktury projektu i pierwszej działającej wersji MVP.
+Start by generating the project structure and the first working MVP version.

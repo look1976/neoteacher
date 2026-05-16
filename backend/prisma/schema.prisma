@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExerciseType {
+  multiple_choice
+  picture_choice
+  text_translation
+  sentence_translation
+  fill_gap
+  transform_sentence
+  build_question
+  order_words
+  match_pairs
+  listening
+  dictation
+}
+
+enum TestMode {
+  learning
+  test
+  review
+}
+
+model UserProfile {
+  id             Int                    @id @default(autoincrement())
+  name           String
+  nativeLanguage String
+  targetLanguage String
+  createdAt      DateTime               @default(now())
+  lastUsedAt     DateTime?
+  settings       Settings?
+  exerciseSets   ExerciseSet[]          @relation("ProfileExerciseSets")
+  progress       UserExerciseProgress[]
+  testSessions   TestSession[]
+}
+
+model Language {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model ExerciseSet {
+  id             Int         @id @default(autoincrement())
+  title          String
+  description    String?
+  targetLanguage String
+  nativeLanguage String
+  level          String?
+  category       String?
+  createdBy      Int?
+  isBuiltIn      Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  exercises      Exercise[]
+  creator        UserProfile? @relation(fields: [createdBy], references: [id], name: "ProfileExerciseSets", onDelete: Cascade)
+}
+
+model Exercise {
+  id                Int                     @id @default(autoincrement())
+  exerciseSet       ExerciseSet             @relation(fields: [exerciseSetId], references: [id], onDelete: Cascade)
+  exerciseSetId     Int
+  type              ExerciseType
+  questionText      String
+  promptText        String?
+  correctAnswers    Json
+  acceptableAnswers Json?
+  explanation       String?
+  grammarNoteId     Int?
+  imagePath         String?
+  audioPath         String?
+  difficulty        String?
+  tags              Json?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  answerOptions     AnswerOption[]
+  grammarNote       GrammarNote?            @relation(fields: [grammarNoteId], references: [id], onDelete: SetNull)
+  progress          UserExerciseProgress[]
+  sessionAnswers    TestSessionAnswer[]
+}
+
+model AnswerOption {
+  id         Int      @id @default(autoincrement())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId Int
+  text       String
+  isCorrect  Boolean  @default(false)
+  imagePath  String?
+  audioPath  String?
+  sortOrder  Int      @default(0)
+}
+
+model GrammarNote {
+  id              Int         @id @default(autoincrement())
+  language        String
+  title           String
+  topic           String?
+  contentMarkdown String
+  examplesJson    Json?
+  level           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  exercises       Exercise[]
+}
+
+model UserExerciseProgress {
+  id              Int         @id @default(autoincrement())
+  userProfile     UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId   Int
+  exercise        Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId      Int
+  attempts        Int         @default(0)
+  correctAttempts Int         @default(0)
+  wrongAttempts   Int         @default(0)
+  masteryLevel    Int         @default(0)
+  lastAnswer      String?
+  lastAnsweredAt  DateTime?
+  nextReviewAt    DateTime?
+  easeFactor      Float       @default(2.5)
+  intervalDays    Int         @default(0)
+  updatedAt       DateTime    @updatedAt
+
+  @@unique([userProfileId, exerciseId])
+}
+
+model TestSession {
+  id             Int                 @id @default(autoincrement())
+  userProfile    UserProfile         @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId  Int
+  mode           TestMode            @default(learning)
+  startedAt      DateTime            @default(now())
+  finishedAt     DateTime?
+  totalQuestions Int                 @default(0)
+  correctAnswers Int                 @default(0)
+  scorePercent   Float               @default(0)
+  answers        TestSessionAnswer[]
+}
+
+model TestSessionAnswer {
+  id               Int          @id @default(autoincrement())
+  testSession      TestSession  @relation(fields: [testSessionId], references: [id], onDelete: Cascade)
+  testSessionId    Int
+  exercise         Exercise     @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId       Int
+  userAnswer       String?
+  isCorrect        Boolean      @default(false)
+  timeSpentSeconds Int          @default(0)
+  usedHint         Boolean      @default(false)
+  answeredAt       DateTime     @default(now())
+}
+
+model Settings {
+  id                     Int         @id @default(autoincrement())
+  userProfile            UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId          Int         @unique
+  autoPlayAudio          Boolean     @default(false)
+  showHintsInLearningMode Boolean    @default(true)
+  repeatWrongAnswers     Boolean     @default(true)
+  learningIntensity      String?
+  theme                  String?
+  updatedAt              DateTime    @updatedAt
+}
