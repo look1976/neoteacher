@@ -8,7 +8,7 @@ router.get("/", async (_req, res, next) => {
     const notes = await prisma.grammarNote.findMany();
     res.json(notes);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(note);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -45,7 +45,7 @@ router.post("/", async (req, res, next) => {
 
     res.status(201).json(note);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

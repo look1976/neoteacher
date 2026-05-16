@@ -24,7 +24,7 @@ router.get("/", async (_req, res, next) => {
     });
     res.json(sets);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -41,7 +41,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(set);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -53,7 +53,7 @@ router.post("/", async (req, res, next) => {
     });
     res.status(201).json(exerciseSet);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -66,7 +66,7 @@ router.patch("/:id", async (req, res, next) => {
     });
     res.json(exerciseSet);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -75,7 +75,7 @@ router.delete("/:id", async (req, res, next) => {
     await prisma.exerciseSet.delete({ where: { id: Number(req.params.id) } });
     res.status(204).send();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

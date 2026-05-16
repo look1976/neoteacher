@@ -12,9 +12,23 @@ const answerOptionSchema = z.object({
   sortOrder: z.number().optional().default(0),
 });
 
+const exerciseTypeSchema = z.enum([
+  "multiple_choice",
+  "picture_choice",
+  "text_translation",
+  "sentence_translation",
+  "fill_gap",
+  "transform_sentence",
+  "build_question",
+  "order_words",
+  "match_pairs",
+  "listening",
+  "dictation",
+]);
+
 const createExerciseSchema = z.object({
   exerciseSetId: z.number().int(),
-  type: z.string(),
+  type: exerciseTypeSchema,
   questionText: z.string(),
   promptText: z.string().optional(),
   correctAnswers: z.array(z.string()),
@@ -28,7 +42,7 @@ const createExerciseSchema = z.object({
   answerOptions: z.array(answerOptionSchema).optional(),
 });
 
-const updateExerciseSchema = createExerciseSchema.partial();
+const updateExerciseSchema = createExerciseSchema.partial().omit({ answerOptions: true });
 
 router.get("/", async (_req, res, next) => {
   try {
@@ -37,7 +51,7 @@ router.get("/", async (_req, res, next) => {
     });
     res.json(exercises);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -54,7 +68,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(exercise);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -86,24 +100,28 @@ router.post("/", async (req, res, next) => {
 
     res.status(201).json(exercise);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
 router.patch("/:id", async (req, res, next) => {
   try {
     const payload = updateExerciseSchema.parse(req.body);
+    const data: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(payload)) {
+      if (value !== undefined) {
+        data[key] = value;
+      }
+    }
     const exercise = await prisma.exercise.update({
       where: { id: Number(req.params.id) },
-      data: {
-        ...payload,
-      },
+      data,
       include: { answerOptions: true },
     });
 
     res.json(exercise);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -112,7 +130,7 @@ router.delete("/:id", async (req, res, next) => {
     await prisma.exercise.delete({ where: { id: Number(req.params.id) } });
     res.status(204).send();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

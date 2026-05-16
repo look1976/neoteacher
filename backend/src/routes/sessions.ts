@@ -75,7 +75,7 @@ router.post("/learning/start", async (req, res, next) => {
       exercises: exercises.map(sanitizeExercise),
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -156,7 +156,7 @@ router.post("/:id/answer", async (req, res, next) => {
       exerciseId: payload.exerciseId,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -171,7 +171,7 @@ router.post("/:id/finish", async (req, res, next) => {
       return res.status(400).json({ error: "No answers recorded for this session." });
     }
 
-    const correctAnswers = answers.filter((item) => item.isCorrect).length;
+    const correctAnswers = answers.filter((item: any) => item.isCorrect).length;
     const totalQuestions = answers.length;
     const scorePercent = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
@@ -188,7 +188,7 @@ router.post("/:id/finish", async (req, res, next) => {
 
     res.json(session);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -206,7 +206,7 @@ router.get("/:id/report", async (req, res, next) => {
 
     res.json(session);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

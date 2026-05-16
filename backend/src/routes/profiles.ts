@@ -17,7 +17,7 @@ router.get("/", async (_req, res, next) => {
     const profiles = await prisma.userProfile.findMany({ include: { settings: true } });
     res.json(profiles);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -30,7 +30,7 @@ router.get("/:id/progress", async (req, res, next) => {
     });
     res.json(progress);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -46,7 +46,7 @@ router.get("/:id/reviews", async (req, res, next) => {
     });
     res.json(reviews);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -74,14 +74,14 @@ router.post("/:id/reviews/start", async (req, res, next) => {
 
     res.status(201).json({
       sessionId: session.id,
-      exercises: dueReviews.map((review) => ({
+      exercises: dueReviews.map((review: any) => ({
         ...review.exercise,
         correctAnswers: undefined,
         acceptableAnswers: undefined,
       })),
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -98,7 +98,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(profile);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -126,7 +126,7 @@ router.post("/", async (req, res, next) => {
 
     res.status(201).json(profile);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -140,7 +140,7 @@ router.patch("/:id", async (req, res, next) => {
     });
     res.json(profile);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -149,7 +149,7 @@ router.delete("/:id", async (req, res, next) => {
     await prisma.userProfile.delete({ where: { id: Number(req.params.id) } });
     res.status(204).send();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
