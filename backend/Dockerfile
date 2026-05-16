@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:20-bullseye-slim AS builder
 WORKDIR /app/backend
 
 COPY backend/package.json backend/package-lock.json* ./
@@ -8,13 +8,15 @@ COPY backend/prisma ./prisma
 COPY backend/src ./src
 
 RUN npm install
+RUN npx prisma generate || true
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM node:20-bullseye-slim AS runner
 WORKDIR /app/backend
 
 COPY backend/package.json backend/package-lock.json* ./
-RUN npm install --production
+# Copy node_modules from builder so generated Prisma client is available at runtime
+COPY --from=builder /app/backend/node_modules ./node_modules
 
 COPY --from=builder /app/backend/dist ./dist
 COPY --from=builder /app/backend/prisma ./prisma
