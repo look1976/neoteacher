@@ -7,11 +7,13 @@ import Dashboard from "./components/Dashboard";
 import ExerciseSetList from "./components/ExerciseSetList";
 import Loading from "./components/Loading";
 import ErrorBanner from "./components/ErrorBanner";
+import LearningSession from "./components/LearningSession";
 
 function App() {
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([]);
   const [selectedProfileId, setSelectedProfileId] = useState<number | null>(null);
+  const [activeExerciseSet, setActiveExerciseSet] = useState<ExerciseSet | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,13 +51,19 @@ function App() {
       {error && <ErrorBanner message={error} />}
       {loading ? (
         <Loading />
+      ) : selectedProfile && activeExerciseSet ? (
+        <LearningSession
+          profile={selectedProfile}
+          exerciseSet={activeExerciseSet}
+          onClose={() => setActiveExerciseSet(null)}
+        />
       ) : (
         <>
           <ProfileSelector profiles={profiles} selectedProfileId={selectedProfileId} onSelect={setSelectedProfileId} />
           {selectedProfile ? (
             <>
               <Dashboard profile={selectedProfile} exerciseSets={exerciseSets} />
-              <ExerciseSetList exerciseSets={exerciseSets} />
+              <ExerciseSetList exerciseSets={exerciseSets} canStart={Boolean(selectedProfile)} onStart={setActiveExerciseSet} />
             </>
           ) : (
             <p>Select a profile to view the dashboard and exercise sets.</p>

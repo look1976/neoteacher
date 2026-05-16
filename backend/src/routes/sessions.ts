@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import prisma from "../lib/prisma";
 import { checkAnswer } from "../lib/checkAnswer";
+import { buildProgressUpdate } from "../lib/progress";
 
 const router = Router();
 
@@ -110,7 +111,23 @@ router.post("/:id/answer", async (req, res, next) => {
       },
     });
 
-    const progressEntry = await prisma.userExerciseProgress.upsert({
+    const existingProgress = await prisma.userExerciseProgress.findUnique({
+      where: {
+        userProfileId_exerciseId: {
+          userProfileId: session.userProfileId,
+          exerciseId: payload.exerciseId,
+        },
+      },
+    });
+    const answeredAt = new Date();
+    const progressUpdate = buildProgressUpdate({
+      existingProgress,
+      isCorrect: result.isCorrect,
+      userAnswer: payload.userAnswer,
+      answeredAt,
+    });
+
+    await prisma.userExerciseProgress.upsert({
       where: {
         userProfileId_exerciseId: {
           userProfileId: session.userProfileId,
@@ -120,40 +137,22 @@ router.post("/:id/answer", async (req, res, next) => {
       create: {
         userProfileId: session.userProfileId,
         exerciseId: payload.exerciseId,
-        attempts: 1,
-        correctAttempts: result.isCorrect ? 1 : 0,
-        wrongAttempts: result.isCorrect ? 0 : 1,
-        masteryLevel: result.isCorrect ? 1 : 0,
-        lastAnswer: payload.userAnswer,
-        lastAnsweredAt: new Date(),
-        nextReviewAt: result.isCorrect ? new Date(Date.now() + 24 * 60 * 60 * 1000) : new Date(),
+        ...progressUpdate,
       },
       update: {
-        attempts: { increment: 1 },
-        correctAttempts: { increment: result.isCorrect ? 1 : 0 },
-        wrongAttempts: { increment: result.isCorrect ? 0 : 1 },
-        lastAnswer: payload.userAnswer,
-        lastAnsweredAt: new Date(),
-        masteryLevel: {
-          increment: result.isCorrect ? 1 : -1,
-        },
-        nextReviewAt: result.isCorrect
-          ? new Date(Date.now() + 24 * 60 * 60 * 1000)
-          : new Date(),
+        ...progressUpdate,
       },
     });
 
-    await prisma.userExerciseProgress.update({
-      where: { id: progressEntry.id },
-      data: {
-        masteryLevel: Math.max(0, Math.min(5, progressEntry.masteryLevel)),
-      },
-    });
+    const canShowLearningFeedback = session.mode !== "test";
 
     res.json({
       ...result,
       sessionId: session.id,
       exerciseId: payload.exerciseId,
+      explanation: canShowLearningFeedback ? exercise.explanation : undefined,
+      correctAnswers: canShowLearningFeedback ? exercise.correctAnswers : undefined,
+      acceptableAnswers: canShowLearningFeedback ? exercise.acceptableAnswers : undefined,
     });
   } catch (error) {
     return next(error);

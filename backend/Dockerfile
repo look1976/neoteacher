@@ -20,6 +20,8 @@ COPY --from=builder /app/backend/node_modules ./node_modules
 
 COPY --from=builder /app/backend/dist ./dist
 COPY --from=builder /app/backend/prisma ./prisma
+COPY --from=builder /app/tsconfig.json /app/tsconfig.json
+COPY --from=builder /app/backend/tsconfig.json ./tsconfig.json
 
 ENV NODE_ENV=production
 EXPOSE 4000
