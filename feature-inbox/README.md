@@ -10,20 +10,22 @@ Each file describes one implementation-ready feature area with scope, acceptance
 
 ## Priority Order
 
-1. `01-frontend-learning-flow.md`
-2. `02-progress-and-spaced-repetition.md`
-3. `03-seed-data-expansion.md`
-4. `04-profile-creation-ui.md`
-5. `05-grammar-notes-learning-ui.md`
-6. `06-exercise-editor.md`
-7. `07-json-import-export.md`
-8. `08-media-upload-and-playback.md`
-9. `09-test-mode.md`
-10. `10-theme-and-ui-foundation.md`
-11. `11-readme-and-dev-workflow.md`
-12. `12-test-coverage.md`
+1. `03-seed-data-expansion.md`
+2. `04-profile-creation-ui.md`
+3. `05-grammar-notes-learning-ui.md`
+4. `06-exercise-editor.md`
+5. `07-json-import-export.md`
+6. `08-media-upload-and-playback.md`
+7. `09-test-mode.md`
+8. `10-theme-and-ui-foundation.md`
+9. `11-readme-and-dev-workflow.md`
+10. `12-test-coverage.md`
+
+## Implemented
+
+- `implemented/01-frontend-learning-flow.md`
+- `implemented/02-progress-and-spaced-repetition.md`
 
 ## Current State Summary
 
-The backend already has a useful foundation: Prisma models, REST endpoints, answer checking, sessions, progress rows, seed support, and Docker services. The largest gap is that the frontend does not expose the core learning loop. A user can view seeded profiles and exercise sets, but cannot start a lesson, answer questions, see feedback, repeat mistakes, or finish a session through the UI.
-
+The backend already has a useful foundation: Prisma models, REST endpoints, answer checking, sessions, progress rows, seed support, and Docker services. The core learning loop now exists, and the dashboard can show persisted progress, due reviews, and mistakes. The next largest gap is seed data depth.
