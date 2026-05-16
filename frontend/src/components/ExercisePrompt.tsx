@@ -33,42 +33,35 @@ export default function ExercisePrompt({
   const isMultipleChoice = exercise.type === "multiple_choice" && answerOptions.length > 0;
 
   return (
-    <div>
+    <div className="section card card-body">
       <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f766e", textTransform: "uppercase" }}>
+        <div className="text-muted" style={{ fontSize: "0.85rem", fontWeight: 700, textTransform: "uppercase" }}>
           {exercise.type.replace(/_/g, " ")}
         </div>
-        <h2 style={{ margin: "6px 0 0" }}>{exercise.questionText}</h2>
-        {exercise.promptText && <p style={{ margin: "8px 0 0", color: "#475569" }}>{exercise.promptText}</p>}
+        <h2 style={{ margin: "0.4rem 0 0" }}>{exercise.questionText}</h2>
+        {exercise.promptText && <p className="text-muted" style={{ marginTop: "0.5rem" }}>{exercise.promptText}</p>}
       </div>
 
       {exercise.imagePath && (
         <img
           src={exercise.imagePath}
           alt=""
-          style={{ display: "block", maxWidth: "100%", maxHeight: 280, objectFit: "contain", marginBottom: 16, borderRadius: 8 }}
+          style={{ display: "block", width: "100%", maxWidth: "100%", maxHeight: 280, objectFit: "contain", marginBottom: 16, borderRadius: 12 }}
         />
       )}
 
       {exercise.audioPath && <audio src={exercise.audioPath} controls style={{ width: "100%", marginBottom: 16 }} />}
 
       {isMultipleChoice ? (
-        <div style={{ display: "grid", gap: 10 }}>
+        <div className="grid-list">
           {answerOptions.map((option) => (
             <button
               key={option.id}
               type="button"
               disabled={disabled || submitting}
               onClick={() => onSubmitAnswer(option.text)}
-              style={{
-                padding: "0.9rem 1rem",
-                borderRadius: 8,
-                border: "1px solid #cbd5e1",
-                backgroundColor: "#ffffff",
-                color: "#0f172a",
-                textAlign: "left",
-                cursor: disabled || submitting ? "not-allowed" : "pointer",
-              }}
+              className="button button-secondary"
+              style={{ textAlign: "left" }}
             >
               {option.text}
             </button>
@@ -80,34 +73,20 @@ export default function ExercisePrompt({
             event.preventDefault();
             onSubmitAnswer(answerText);
           }}
+          className="field-group"
         >
           <input
             value={answerText}
             disabled={disabled || submitting}
             onChange={(event) => onAnswerTextChange(event.target.value)}
             placeholder={getPromptPlaceholder(exercise.type)}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "0.9rem 1rem",
-              borderRadius: 8,
-              border: "1px solid #cbd5e1",
-              fontSize: "1rem",
-            }}
+            className="input"
           />
           <button
             type="submit"
             disabled={disabled || submitting || answerText.trim().length === 0}
-            style={{
-              marginTop: 12,
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              border: "1px solid #0f766e",
-              backgroundColor: disabled || submitting || answerText.trim().length === 0 ? "#99f6e4" : "#0f766e",
-              color: "#ffffff",
-              fontWeight: 700,
-              cursor: disabled || submitting || answerText.trim().length === 0 ? "not-allowed" : "pointer",
-            }}
+            className="button button-primary"
+            style={{ width: "fit-content" }}
           >
             {submitting ? "Checking..." : "Check answer"}
           </button>

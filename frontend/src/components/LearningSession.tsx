@@ -24,28 +24,16 @@ function formatAnswerList(value: unknown): string | null {
   return null;
 }
 
-function getResultStyles(result: AnswerCheckResponse) {
+function getResultClass(result: AnswerCheckResponse) {
   if (result.isCorrect) {
-    return {
-      backgroundColor: "#dcfce7",
-      borderColor: "#86efac",
-      color: "#166534",
-    };
+    return "result-card result-correct";
   }
 
   if (result.almostCorrect) {
-    return {
-      backgroundColor: "#fef9c3",
-      borderColor: "#fde68a",
-      color: "#854d0e",
-    };
+    return "result-card result-almost";
   }
 
-  return {
-    backgroundColor: "#fee2e2",
-    borderColor: "#fecaca",
-    color: "#991b1b",
-  };
+  return "result-card result-wrong";
 }
 
 export default function LearningSession({ profile, exerciseSet, onClose }: LearningSessionProps) {
@@ -177,7 +165,7 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
 
   if (loading) {
     return (
-      <section style={{ marginBottom: 24 }}>
+      <section className="section">
         <Loading />
       </section>
     );
@@ -185,29 +173,35 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
 
   if (report) {
     return (
-      <section style={{ marginBottom: 24, padding: 16, borderRadius: 8, border: "1px solid #cbd5e1", backgroundColor: "#ffffff" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", flexWrap: "wrap" }}>
+      <section className="section card card-body">
+        <div className="card-header" style={{ padding: 0 }}>
           <div>
-            <h2 style={{ margin: 0 }}>Session complete</h2>
-            <p style={{ margin: "8px 0 0", color: "#475569" }}>{exerciseSet.title}</p>
+            <h2 className="section-title">Session complete</h2>
+            <p className="text-muted" style={{ marginTop: "0.5rem" }}>{exerciseSet.title}</p>
           </div>
-          <button type="button" onClick={onClose} style={{ padding: "0.6rem 0.9rem", borderRadius: 8, border: "1px solid #cbd5e1", backgroundColor: "#ffffff" }}>
+          <button type="button" className="button button-secondary" onClick={onClose}>
             Back to dashboard
           </button>
         </div>
 
-        <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", marginTop: 16 }}>
-          <div style={{ padding: 12, borderRadius: 8, backgroundColor: "#f8fafc", border: "1px solid #e2e8f0" }}>
-            <div style={{ color: "#64748b", fontSize: "0.85rem" }}>Score</div>
-            <strong style={{ fontSize: "1.5rem" }}>{Math.round(report.scorePercent)}%</strong>
+        <div className="grid-columns" style={{ marginTop: "1rem" }}>
+          <div className="card card-surface">
+            <div className="card-body">
+              <div className="text-muted" style={{ marginBottom: 4 }}>Score</div>
+              <strong style={{ fontSize: "1.5rem" }}>{Math.round(report.scorePercent)}%</strong>
+            </div>
           </div>
-          <div style={{ padding: 12, borderRadius: 8, backgroundColor: "#f8fafc", border: "1px solid #e2e8f0" }}>
-            <div style={{ color: "#64748b", fontSize: "0.85rem" }}>Correct</div>
-            <strong style={{ fontSize: "1.5rem" }}>{report.correctAnswers}</strong>
+          <div className="card card-surface">
+            <div className="card-body">
+              <div className="text-muted" style={{ marginBottom: 4 }}>Correct</div>
+              <strong style={{ fontSize: "1.5rem" }}>{report.correctAnswers}</strong>
+            </div>
           </div>
-          <div style={{ padding: 12, borderRadius: 8, backgroundColor: "#f8fafc", border: "1px solid #e2e8f0" }}>
-            <div style={{ color: "#64748b", fontSize: "0.85rem" }}>Answered</div>
-            <strong style={{ fontSize: "1.5rem" }}>{completedAnswers}</strong>
+          <div className="card card-surface">
+            <div className="card-body">
+              <div className="text-muted" style={{ marginBottom: 4 }}>Answered</div>
+              <strong style={{ fontSize: "1.5rem" }}>{completedAnswers}</strong>
+            </div>
           </div>
         </div>
       </section>
@@ -216,9 +210,9 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
 
   if (!currentExercise) {
     return (
-      <section style={{ marginBottom: 24 }}>
+      <section className="section">
         {error && <ErrorBanner message={error} />}
-        <button type="button" onClick={onClose} style={{ padding: "0.6rem 0.9rem", borderRadius: 8, border: "1px solid #cbd5e1", backgroundColor: "#ffffff" }}>
+        <button type="button" className="button button-secondary" onClick={onClose}>
           Back to dashboard
         </button>
       </section>
@@ -229,15 +223,15 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
   const acceptableAnswerText = formatAnswerList(answerResult?.acceptableAnswers);
 
   return (
-    <section style={{ marginBottom: 24, padding: 16, borderRadius: 8, border: "1px solid #cbd5e1", backgroundColor: "#ffffff" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", flexWrap: "wrap", marginBottom: 18 }}>
+    <section className="section card card-body">
+      <div className="card-header" style={{ marginBottom: 18 }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>{exerciseSet.title}</h1>
-          <p style={{ margin: "6px 0 0", color: "#475569" }}>
+          <h1 className="typed-heading">{exerciseSet.title}</h1>
+          <p className="text-muted" style={{ marginTop: "0.5rem" }}>
             {profile.name} · Question {Math.min(answeredThisSession + 1, initialExerciseCount)} of {initialExerciseCount}
           </p>
         </div>
-        <button type="button" onClick={onClose} style={{ padding: "0.6rem 0.9rem", borderRadius: 8, border: "1px solid #cbd5e1", backgroundColor: "#ffffff" }}>
+        <button type="button" className="button button-secondary" onClick={onClose}>
           Exit lesson
         </button>
       </div>
@@ -254,40 +248,24 @@ export default function LearningSession({ profile, exerciseSet, onClose }: Learn
       />
 
       {answerResult && (
-        <div
-          style={{
-            marginTop: 18,
-            padding: 14,
-            borderRadius: 8,
-            border: `1px solid ${getResultStyles(answerResult).borderColor}`,
-            ...getResultStyles(answerResult),
-          }}
-        >
+        <div className={getResultClass(answerResult)}>
           <strong>{answerResult.feedback}</strong>
           {correctAnswerText && !answerResult.isCorrect && (
-            <p style={{ margin: "8px 0 0" }}>Model answer: {correctAnswerText}</p>
+            <p style={{ margin: "0.5rem 0 0" }}>Model answer: {correctAnswerText}</p>
           )}
           {acceptableAnswerText && !answerResult.isCorrect && (
-            <p style={{ margin: "8px 0 0" }}>Also accepted: {acceptableAnswerText}</p>
+            <p style={{ margin: "0.5rem 0 0" }}>Also accepted: {acceptableAnswerText}</p>
           )}
-          {answerResult.explanation && <p style={{ margin: "8px 0 0" }}>{answerResult.explanation}</p>}
+          {answerResult.explanation && <p style={{ margin: "0.5rem 0 0" }}>{answerResult.explanation}</p>}
           {!answerResult.isCorrect && (repeatCounts[currentExercise.id] ?? 0) < 1 && (
-            <p style={{ margin: "8px 0 0" }}>This question will appear once more before the session ends.</p>
+            <p style={{ margin: "0.5rem 0 0" }}>This question will appear once more before the session ends.</p>
           )}
           <button
             type="button"
             onClick={continueSession}
             disabled={finishing}
-            style={{
-              marginTop: 12,
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              border: "1px solid #0f766e",
-              backgroundColor: "#0f766e",
-              color: "#ffffff",
-              fontWeight: 700,
-              cursor: finishing ? "wait" : "pointer",
-            }}
+            className="button button-primary"
+            style={{ marginTop: 12 }}
           >
             {finishing ? "Finishing..." : queue.length > 1 ? "Next question" : "Finish session"}
           </button>

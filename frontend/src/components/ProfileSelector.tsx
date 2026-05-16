@@ -14,27 +14,16 @@ export default function ProfileSelector({ profiles, selectedProfileId, onSelect,
   const [formError, setFormError] = useState<string | null>(null);
 
   return (
-    <section style={{ marginBottom: 24 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+    <section className="section">
+      <div className="card-body card-header" style={{ padding: 0, border: "none", boxShadow: "none" }}>
         <div>
-          <h2 style={{ margin: 0 }}>Choose a profile</h2>
-          <p style={{ margin: "8px 0 0", color: "#475569" }}>Create or select a profile to continue.</p>
+          <h2 className="section-title">Choose a profile</h2>
+          <p className="text-muted">Create or select a profile to continue.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
+        <button type="button" className="button button-secondary" onClick={() => {
             setIsCreating((next) => !next);
             setFormError(null);
-          }}
-          style={{
-            padding: "0.75rem 1rem",
-            borderRadius: 8,
-            border: "1px solid #0f766e",
-            backgroundColor: isCreating ? "#f0fdf4" : "#0f766e",
-            color: isCreating ? "#0f766e" : "#ffffff",
-            cursor: "pointer",
-          }}
-        >
+          }}>
           {isCreating ? "Cancel" : "Create profile"}
         </button>
       </div>
@@ -59,23 +48,23 @@ export default function ProfileSelector({ profiles, selectedProfileId, onSelect,
       ) : profiles.length === 0 ? (
         <p>No profiles found. Please create a profile to begin.</p>
       ) : (
-        <div style={{ display: "grid", gap: 12 }}>
+        <div className="grid-list">
           {profiles.map((profile) => (
             <button
               key={profile.id}
               type="button"
+              className="button button-secondary"
               onClick={() => onSelect(profile.id)}
               style={{
-                padding: "1rem",
-                borderRadius: 8,
-                border: selectedProfileId === profile.id ? "2px solid #0f766e" : "1px solid #d1d5db",
-                backgroundColor: selectedProfileId === profile.id ? "#ccfbf1" : "#ffffff",
+                display: "block",
+                width: "100%",
                 textAlign: "left",
-                cursor: "pointer",
+                borderColor: selectedProfileId === profile.id ? "var(--primary)" : "var(--border-strong)",
+                background: selectedProfileId === profile.id ? "rgba(15, 118, 110, 0.1)" : "var(--surface)",
               }}
             >
               <strong>{profile.name}</strong>
-              <div style={{ fontSize: "0.9rem", color: "#4b5563" }}>
+              <div className="text-muted" style={{ marginTop: "0.25rem" }}>
                 {profile.nativeLanguage} → {profile.targetLanguage}
               </div>
             </button>

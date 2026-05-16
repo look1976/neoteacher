@@ -48,31 +48,31 @@ export default function ProfileForm({ onSubmit, onCancel, error }: ProfileFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 20, backgroundColor: "#f8fafc" }}>
-      <div style={{ display: "grid", gap: 16 }}>
+    <form className="card card-body section" onSubmit={handleSubmit}>
+      <div className="field-group">
         <div>
-          <label htmlFor="profile-name" style={{ display: "block", fontWeight: 600, marginBottom: 6 }}>
+          <label htmlFor="profile-name" className="label">
             Name
           </label>
           <input
             id="profile-name"
+            className="input"
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Anna"
-            style={{ width: "100%", padding: "0.75rem", borderRadius: 8, border: "1px solid #cbd5e1" }}
           />
         </div>
 
-        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "1fr 1fr" }}>
+        <div className="field-row">
           <div>
-            <label htmlFor="profile-native-language" style={{ display: "block", fontWeight: 600, marginBottom: 6 }}>
+            <label htmlFor="profile-native-language" className="label">
               Native language
             </label>
             <select
               id="profile-native-language"
+              className="select"
               value={nativeLanguage}
               onChange={(event) => setNativeLanguage(event.target.value)}
-              style={{ width: "100%", padding: "0.75rem", borderRadius: 8, border: "1px solid #cbd5e1" }}
             >
               {LANGUAGE_OPTIONS.map((language) => (
                 <option key={language} value={language}>
@@ -83,14 +83,14 @@ export default function ProfileForm({ onSubmit, onCancel, error }: ProfileFormPr
           </div>
 
           <div>
-            <label htmlFor="profile-target-language" style={{ display: "block", fontWeight: 600, marginBottom: 6 }}>
+            <label htmlFor="profile-target-language" className="label">
               Target language
             </label>
             <select
               id="profile-target-language"
+              className="select"
               value={targetLanguage}
               onChange={(event) => setTargetLanguage(event.target.value)}
-              style={{ width: "100%", padding: "0.75rem", borderRadius: 8, border: "1px solid #cbd5e1" }}
             >
               {LANGUAGE_OPTIONS.map((language) => (
                 <option key={language} value={language}>
@@ -102,38 +102,16 @@ export default function ProfileForm({ onSubmit, onCancel, error }: ProfileFormPr
         </div>
 
         {(localError || error) && (
-          <div style={{ color: "#b91c1c", fontSize: "0.95rem" }}>
+          <div className="text-muted" style={{ color: "var(--danger)", fontSize: "0.95rem" }}>
             {localError ?? error}
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <button
-            type="submit"
-            disabled={saving}
-            style={{
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              border: "1px solid #0f766e",
-              backgroundColor: "#0f766e",
-              color: "#fff",
-              cursor: saving ? "not-allowed" : "pointer",
-            }}
-          >
+        <div className="button-group">
+          <button type="submit" className="button button-primary" disabled={saving}>
             {saving ? "Creating…" : "Create profile"}
           </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            style={{
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              border: "1px solid #d1d5db",
-              backgroundColor: "#fff",
-              color: "#0f172a",
-              cursor: "pointer",
-            }}
-          >
+          <button type="button" className="button button-secondary" onClick={onCancel}>
             Cancel
           </button>
         </div>
