@@ -11,7 +11,7 @@ Najważniejsza idea programu:
 - obsługuje różne języki, początkowo angielski,
 - działa jak lokalne „laboratorium ćwiczeń językowych”.
 
-Nazwa robocza aplikacji: NeoTeacher.
+Nazwa aplikacji: NeoTeacher.
 
 ────────────────────────────────────
 1. GŁÓWNE ZAŁOŻENIA
@@ -109,7 +109,7 @@ Backend:
 - REST API.
 
 Baza danych:
-- SQLite,
+- MySQL,
 - Prisma ORM.
 
 Przechowywanie plików:
@@ -805,7 +805,7 @@ Kod ma być czytelny, modularny i gotowy do dalszego rozwijania.
 Jeśli trzeba zacząć od MVP, zaimplementuj najpierw:
 
 - profile użytkowników,
-- SQLite + Prisma,
+- MySQL + Prisma,
 - lista zestawów ćwiczeń,
 - seed przykładowych ćwiczeń,
 - tryb nauki,
@@ -830,7 +830,7 @@ Dopiero potem rozszerzaj o:
 19. WAŻNE WYMAGANIA JAKOŚCIOWE
 ────────────────────────────────────
 
-- Nie używaj mocków tam, gdzie można od razu użyć SQLite.
+- Nie używaj mocków tam, gdzie można od razu użyć MySQL.
 - Nie zapisuj postępów tylko w localStorage.
 - Nie twórz wyłącznie statycznego frontendu.
 - Backend, baza i frontend mają realnie działać razem.

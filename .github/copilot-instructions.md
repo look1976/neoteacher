@@ -6,14 +6,14 @@ This repository contains NeoTeacher, a self-hosted language learning web app ins
 
 - Use React + TypeScript + Vite for the frontend.
 - Use Node.js + TypeScript + Express/Fastify for the backend.
-- Use SQLite with Prisma ORM.
+- Use MySQL with Prisma ORM.
 - Store uploaded media in local `uploads/` folders.
 - Keep frontend and backend separated in a monorepo structure.
 
 ## Development rules
 
 - Do not create static UI-only mockups unless explicitly requested.
-- Persist user profiles, exercises, sessions and progress in SQLite.
+- Persist user profiles, exercises, sessions and progress in MySQL.
 - Use Zod for input validation.
 - Keep answer-checking logic covered by unit tests.
 - Prefer small, readable modules over large files.
