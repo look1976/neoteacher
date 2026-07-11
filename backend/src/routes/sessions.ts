@@ -3,6 +3,7 @@ import { z } from "zod";
 import prisma from "../lib/prisma";
 import { checkAnswer } from "../lib/checkAnswer";
 import { buildProgressUpdate } from "../lib/progress";
+import { buildExerciseQueryPayload } from "../lib/sessionSelection";
 
 const router = Router();
 
@@ -47,18 +48,15 @@ router.post("/learning/start", async (req, res, next) => {
       return res.status(404).json({ error: "Profile not found" });
     }
 
-    const exerciseQuery = payload.exerciseSetId
-      ? prisma.exercise.findMany({
-          where: { exerciseSetId: payload.exerciseSetId },
-          include: { answerOptions: true },
-          take: payload.limit ?? undefined,
-        })
-      : prisma.exercise.findMany({
-          include: { answerOptions: true },
-          take: payload.limit ?? undefined,
-        });
+    const exerciseQueryPayload = buildExerciseQueryPayload({
+      exerciseSetId: payload.exerciseSetId,
+      limit: payload.limit,
+    });
 
-    const exercises = await exerciseQuery;
+    const exercises = await prisma.exercise.findMany({
+      ...exerciseQueryPayload,
+      include: { answerOptions: true },
+    });
     if (exercises.length === 0) {
       return res.status(404).json({ error: "No exercises found for this session." });
     }

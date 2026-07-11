@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import prisma from "../lib/prisma";
+import { checkAnswer } from "../lib/checkAnswer";
 
 const router = Router();
 
@@ -42,7 +43,28 @@ const createExerciseSchema = z.object({
   answerOptions: z.array(answerOptionSchema).optional(),
 });
 
-const updateExerciseSchema = createExerciseSchema.partial().omit({ answerOptions: true });
+const updateExerciseSchema = createExerciseSchema.partial();
+
+router.post("/check", async (req, res, next) => {
+  try {
+    const payload = z
+      .object({
+        userAnswer: z.string(),
+        correctAnswers: z.array(z.string()),
+        acceptableAnswers: z.array(z.string()).optional(),
+      })
+      .parse(req.body);
+
+    const result = checkAnswer(payload.userAnswer, {
+      correctAnswers: payload.correctAnswers,
+      acceptableAnswers: payload.acceptableAnswers,
+    });
+
+    res.json(result);
+  } catch (error) {
+    return next(error);
+  }
+});
 
 router.get("/", async (_req, res, next) => {
   try {
@@ -107,14 +129,27 @@ router.post("/", async (req, res, next) => {
 router.patch("/:id", async (req, res, next) => {
   try {
     const payload = updateExerciseSchema.parse(req.body);
+    const exerciseId = Number(req.params.id);
     const data: Record<string, unknown> = {};
+
     for (const [key, value] of Object.entries(payload)) {
+      if (key === "answerOptions") {
+        continue;
+      }
       if (value !== undefined) {
         data[key] = value;
       }
     }
+
+    if (payload.answerOptions !== undefined) {
+      await prisma.answerOption.deleteMany({ where: { exerciseId } });
+      data.answerOptions = {
+        create: payload.answerOptions,
+      };
+    }
+
     const exercise = await prisma.exercise.update({
-      where: { id: Number(req.params.id) },
+      where: { id: exerciseId },
       data,
       include: { answerOptions: true },
     });

@@ -15,6 +15,12 @@ describe("checkAnswer", () => {
     expect(result.almostCorrect).toBe(false);
   });
 
+  it("normalizes punctuation and whitespace", () => {
+    const result = checkAnswer("  I’ve got a car. ", exercise);
+    expect(result.isCorrect).toBe(true);
+    expect(result.normalizedUserAnswer).toBe("i've got a car");
+  });
+
   it("accepts acceptable variants", () => {
     const result = checkAnswer("I've got a car", exercise);
     expect(result.isCorrect).toBe(true);
@@ -27,10 +33,31 @@ describe("checkAnswer", () => {
     expect(result.isCorrect).toBe(true);
   });
 
-  it("marks near miss as almost correct", () => {
-    const result = checkAnswer("I have got a carr", exercise);
+  it("accepts simple alternatives", () => {
+    const altExercise = { correctAnswers: ["I have got a car/bus"] };
+    const result = checkAnswer("I have got a bus", altExercise);
+    expect(result.isCorrect).toBe(true);
+  });
+
+  it("marks a present simple grammar mistake as almost correct", () => {
+    const grammarExercise = { correctAnswers: ["She drinks coffee every day"] };
+    const result = checkAnswer("She drink coffee every day", grammarExercise);
     expect(result.isCorrect).toBe(false);
     expect(result.almostCorrect).toBe(true);
     expect(result.feedback).toContain("Almost correct");
+  });
+
+  it("accepts fill-gap answers using optional words", () => {
+    const fillGapExercise = { correctAnswers: ["I have [got] a car"] };
+    const result = checkAnswer("I have a car", fillGapExercise);
+    expect(result.isCorrect).toBe(true);
+  });
+
+  it("marks fill-gap near misses as almost correct", () => {
+    const fillGapExercise = { correctAnswers: ["I have [got] a car"] };
+    const result = checkAnswer("I have a carr", fillGapExercise);
+    expect(result.isCorrect).toBe(false);
+    expect(result.almostCorrect).toBe(true);
+    expect(result.score).toBe(0.5);
   });
 });

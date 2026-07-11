@@ -5,6 +5,7 @@ import type { UserProfile, ExerciseSet } from "./types";
 import ProfileSelector from "./components/ProfileSelector";
 import Dashboard from "./components/Dashboard";
 import ExerciseSetList from "./components/ExerciseSetList";
+import ExerciseSetEditor from "./components/ExerciseSetEditor";
 import Loading from "./components/Loading";
 import ErrorBanner from "./components/ErrorBanner";
 import LearningSession from "./components/LearningSession";
@@ -17,6 +18,8 @@ function App() {
     return stored ? Number(stored) : null;
   });
   const [activeExerciseSet, setActiveExerciseSet] = useState<ExerciseSet | null>(null);
+  const [editorExerciseSet, setEditorExerciseSet] = useState<ExerciseSet | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "light";
@@ -98,6 +101,28 @@ function App() {
     return profile;
   };
 
+  const openExerciseEditor = (exerciseSet?: ExerciseSet | null) => {
+    setEditorExerciseSet(exerciseSet ?? null);
+    setEditorOpen(true);
+  };
+
+  const closeExerciseEditor = () => {
+    setEditorOpen(false);
+    setEditorExerciseSet(null);
+  };
+
+  const handleSavedExerciseSet = (updatedSet: ExerciseSet) => {
+    setExerciseSets((current) => {
+      const exists = current.some((item) => item.id === updatedSet.id);
+      if (exists) {
+        return current.map((item) => (item.id === updatedSet.id ? updatedSet : item));
+      }
+      return [...current, updatedSet];
+    });
+    setEditorOpen(false);
+    setEditorExerciseSet(null);
+  };
+
   const toggleTheme = () => {
     setTheme((current) => (current === "light" ? "dark" : "light"));
   };
@@ -122,6 +147,8 @@ function App() {
         <Loading />
       ) : selectedProfile && activeExerciseSet ? (
         <LearningSession profile={selectedProfile} exerciseSet={activeExerciseSet} onClose={() => setActiveExerciseSet(null)} />
+      ) : editorOpen ? (
+        <ExerciseSetEditor exerciseSet={editorExerciseSet} onSaved={handleSavedExerciseSet} onClose={closeExerciseEditor} />
       ) : (
         <>
           <ProfileSelector
@@ -133,7 +160,17 @@ function App() {
           {selectedProfile ? (
             <>
               <Dashboard profile={selectedProfile} exerciseSets={exerciseSets} />
-              <ExerciseSetList exerciseSets={exerciseSets} canStart={Boolean(selectedProfile)} onStart={setActiveExerciseSet} />
+              <div className="hero-bar" style={{ justifyContent: "space-between", marginBottom: 16 }}>
+                <button type="button" className="button button-primary" onClick={() => openExerciseEditor(null)}>
+                  Open exercise editor
+                </button>
+              </div>
+              <ExerciseSetList
+                exerciseSets={exerciseSets}
+                canStart={Boolean(selectedProfile)}
+                onStart={setActiveExerciseSet}
+                onEdit={openExerciseEditor}
+              />
             </>
           ) : (
             <p>Select a profile to view the dashboard and exercise sets.</p>

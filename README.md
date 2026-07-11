@@ -96,6 +96,8 @@ The backend API is available at `http://localhost:4000`.
   npm --workspace backend run test
   ```
 
+  Backend unit tests cover answer checking, spaced repetition progress updates, and session exercise selection.
+
 - Validate frontend build:
 
   ```bash
@@ -113,7 +115,6 @@ NeoTeacher is an early-stage MVP with the following working capabilities:
 
 Missing or incomplete features:
 
-- exercise editor UI
 - advanced lesson scheduling and review algorithm
 - user authentication and multi-user persistence
 - import/export workflows

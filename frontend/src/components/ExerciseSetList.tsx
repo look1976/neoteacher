@@ -4,9 +4,10 @@ interface ExerciseSetListProps {
   exerciseSets: ExerciseSet[];
   canStart: boolean;
   onStart: (exerciseSet: ExerciseSet) => void;
+  onEdit: (exerciseSet: ExerciseSet) => void;
 }
 
-export default function ExerciseSetList({ exerciseSets, canStart, onStart }: ExerciseSetListProps) {
+export default function ExerciseSetList({ exerciseSets, canStart, onStart, onEdit }: ExerciseSetListProps) {
   return (
     <section className="section">
       <h2 className="section-title">Exercise sets</h2>
@@ -37,6 +38,10 @@ export default function ExerciseSetList({ exerciseSets, canStart, onStart }: Exe
                     <span>{set.category ?? "Category unknown"}</span>
                     <span>{set.isBuiltIn ? "Built-in" : "Custom"}</span>
                   </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                  <button type="button" className="button button-secondary" onClick={() => onEdit(set)}>
+                    Edit
+                  </button>
                   <button
                     type="button"
                     className="button button-primary"
@@ -45,6 +50,7 @@ export default function ExerciseSetList({ exerciseSets, canStart, onStart }: Exe
                   >
                     Start lesson
                   </button>
+                </div>
                 </div>
               </div>
             </article>
